@@ -9,13 +9,13 @@ const client = new Client({
     ]
 })
 
-client.on('bot ready', () =>{
-    console.log('ready')
+client.on('ready', () =>{
+    console.log('bot ready')
 })
 
 client.on('messageCreate',(message) => {
     if(message.content === 'ping'){
-        message.reply('pong')
+        message.reply('peng')
     }
 })
 
