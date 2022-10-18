@@ -9,7 +9,7 @@ const client = new Client({
     ]
 })
 
-client.on('ready', () =>{
+client.on('bot ready', () =>{
     console.log('ready')
 })
 
