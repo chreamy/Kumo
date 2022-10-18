@@ -13,10 +13,15 @@ client.on('ready', () =>{
     console.log('bot ready')
 })
 
-client.on('messageCreate',(message) => {
+client.on('messageCreate', async(message) => {
     if(message.content === 'ping'){
-        message.reply('peng')
+        const reply = await message.reply('peng')
+        reply.react('😘')
     }
+})
+
+client.on('messageReactionAdd', (reaction)=>{
+    console.log(reaction)
 })
 
 client.login(process.env.TOKEN)
