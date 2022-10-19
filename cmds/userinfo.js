@@ -11,7 +11,7 @@ module.exports = (client,message,args) => {
     myuser = client.users.cache.find(user => user.id === myuser.id)
     Embed.title+=myuser.username+'#'+myuser.discriminator
     Embed.color=myuser.accent_color
-    Embed.description+='\nNickname: '+(member.nickname || '\`N/A\`\n')+'Joined \`'+message.guild.name+'\` since \`'+new Date(member.joinedTimestamp).toLocaleDateString()+'\`\n'
+    Embed.description+='\nNickname: '+('\`${member.nickname}\`\n' || '\`N/A\`\n')+'Joined \`'+message.guild.name+'\` since \`'+new Date(member.joinedTimestamp).toLocaleDateString()+'\`\n'
     Embed.description+='Joined Discord since \`'+new Date(myuser.createdTimestamp).toLocaleDateString()+'\`\nRoles count: '+`\`${member.roles.cache.size-1}\``
     message.channel.send({embeds:[Embed]})
 }
