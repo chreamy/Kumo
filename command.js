@@ -1,14 +1,14 @@
 const {prefix} = require('./config.json')
-module.exports = (client, aliases, callback) => {
+module.exports.command = (client, aliases, callback) => {
     if(typeof aliases === 'string'){
         aliases = [aliases]
     }
-    client.on('message',message =>{
+    client.on('messageCreate',message =>{
         const {content} = message;
-        aliases.foreach(alias => {
-            const command = `!${alias}`
+        aliases.forEach(alias => {
+            const command = `${prefix}${alias}`
             if(content.startsWith(`${command} `)||content===command){
-                callback(message)
+                callback(client,message)
             }
         })
     })
