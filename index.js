@@ -10,7 +10,8 @@ let cmdlist = {
     'help':['help','h'],
     'avatar':['ava','avatar'],
     'servers':['servers','server'],
-    'getuser':['getuser','gu']
+    'getuser':['getuser','gu'],
+    'spam':'spam'
 }
 exports.cmdlist = cmdlist
 const ping = require('./cmds/ping')
@@ -18,6 +19,7 @@ const help = require('./cmds/help')
 const avatar = require('./cmds/avatar')
 const servers = require('./cmds/servers')
 const getuser = require('./cmds/getuser')
+const spam = require('./cmds/spam')
 //         end cmd list
 //+------------------------------------------+
 
