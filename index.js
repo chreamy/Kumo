@@ -15,7 +15,7 @@ const client = new Client({
 client.on('ready', () =>{
     console.log('bot ready')
     command(client,'ping',message =>{
-        message.channel.send('pong')
+        message.reply('pong')
     })
 })
 
