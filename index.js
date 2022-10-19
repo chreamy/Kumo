@@ -18,7 +18,7 @@ client.on('ready', () =>{
 
 client.on('messageCreate', async(message) => {
     if(message.content === 'ping'){
-        const reply = await message.reply('peng')
+        const reply = await message.reply('pong')
         reply.react('😘')
     }
 })
