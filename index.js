@@ -1,6 +1,8 @@
 "use strict";
 const {Client,Events,GatewayIntentBits} = require('discord.js')
 require('dotenv/config')
+const config = require('./config.json')
+const command = require('./command')
 
 const client = new Client({
     intents: [
