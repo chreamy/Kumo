@@ -14,13 +14,9 @@ const client = new Client({
 
 client.on('ready', () =>{
     console.log('bot ready')
-})
-
-client.on('messageCreate', async(message) => {
-    if(message.content === 'ping'){
-        const reply = await message.reply('pong')
-        reply.react('😘')
-    }
+    command(client,'ping',message =>{
+        message.channel.send('pong')
+    })
 })
 
 client.on('messageReactionAdd', (reaction)=>{
