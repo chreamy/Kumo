@@ -8,7 +8,9 @@ module.exports.command = (client, aliases, callback) => {
         aliases.forEach(alias => {
             const command = `${prefix}${alias}`
             if(content.startsWith(`${command} `)||content===command){
-                callback(client,message)
+                let arg = `${content.slice(command.length)}`
+                let args = arg.split(" ").filter(element => {if (Object.keys(element).length !== 0) {return true;}return false;});
+                callback(client,message,args)
             }
         })
     })

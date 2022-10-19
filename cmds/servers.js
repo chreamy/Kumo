@@ -1,6 +1,6 @@
 let desc = 'Displays all servers this bot is in'
 
-module.exports = (client,message) => {
+module.exports = (client,message,args) => {
     const Embed = {
         color: 0xFFFFFF,
         description: '**Server List**\n\n'

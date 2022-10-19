@@ -1,5 +1,5 @@
 let desc = 'Displays user info'
-module.exports = (client,message) => {
+module.exports = (client,message,args) => {
     let myuser = message.mentions.users.first() || message.author
     const Embed = {
         color: 0xFFFFFF,

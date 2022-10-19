@@ -1,5 +1,5 @@
 let desc = 'Displays avatar of the sender, or the person mentioned'
-module.exports = (client,message) => {
+module.exports = (client,message,args) => {
     const user = message.mentions.users.first() || message.author;
     const Embed = {
         color: 0xFFFFFF,

@@ -8,7 +8,7 @@ const Embed = {
     description: ''
 }
 
-module.exports = (client,message)=>{
+module.exports = (client,message,args)=>{
     let out =''
     let funcname
     for (const [key, value] of Object.entries(cmdlist)) {
