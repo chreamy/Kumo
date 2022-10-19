@@ -19,6 +19,13 @@ client.on('ready', () =>{
     })
 })
 
+client.on('messageCreate', async(message) => {
+    if(message.content === 'ping'){
+        const reply = await message.reply('pong')
+        reply.react('😘')
+    }
+})
+
 client.on('messageReactionAdd', (reaction)=>{
     console.log(reaction)
 })
