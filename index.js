@@ -1,4 +1,4 @@
-//const mongoose = require('mongoose')
+/*//const mongoose = require('mongoose')
 const {Client,Events,GatewayIntentBits} = require('discord.js')
 require('dotenv/config')
 //const config = require('./config.json')
@@ -53,4 +53,4 @@ client.on('ready', async () =>{
 })
 
 
-client.login(process.env.TOKEN)
+client.login(process.env.TOKEN)*/
