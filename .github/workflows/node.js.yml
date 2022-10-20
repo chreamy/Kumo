@@ -34,7 +34,7 @@ jobs:
         with:
           key: ${{ secrets.HOST_SSH_KEY }}
           host: ${{ secrets.HOST_IP }}
-          username: 'root'
+          username: ${{ secrets.HOST_USERNAME }}
           script: |
             pm2 delete all
             cd /root/Kumo
