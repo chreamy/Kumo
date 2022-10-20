@@ -6,28 +6,20 @@ const {command} = require('./command')
 //+------------------------------------------+
 //         cmd list
 let cmdlist = {
-    'misc':{
-        'ping':'ping',
-        'help':['help','h'],
-        'avatar':['avatar','ava'],
-        'servers':['servers','server'],
-        'userinfo':['userinfo','ui','info','getuser','gu'],
-    },
-    'fun':{
-        'spam':'spam'
-    },
-    'util':{
-        'changeprefix':['changeprefix','prefix']
-    }
+    'ping':'ping',
+    'help':['help','h'],
+    'avatar':['ava','avatar'],
+    'servers':['servers','server'],
+    'userinfo':['userinfo','ui','info','getuser','gu'],
+    'spam':'spam'
 }
 exports.cmdlist = cmdlist
-const ping = require('./cmds/misc/ping')
-const help = require('./cmds/misc/help')
-const avatar = require('./cmds/misc/avatar')
-const servers = require('./cmds/misc/servers')
-const userinfo = require('./cmds/misc/userinfo')
-const spam = require('./cmds/fun/spam')
-const changeprefix = require('./cmds/util/changeprefix')
+const ping = require('./cmds/ping')
+const help = require('./cmds/help')
+const avatar = require('./cmds/avatar')
+const servers = require('./cmds/servers')
+const userinfo = require('./cmds/userinfo')
+const spam = require('./cmds/spam')
 //         end cmd list
 //+------------------------------------------+
 
@@ -40,11 +32,9 @@ const client = new Client({
 })
 client.on('ready', () =>{
     console.log('bot ready')
-    for (const [category,cat_commands] of Object.entries(cmdlist)) {
-    for (const [key, value] of Object.entries(cat_commands)) {
+    for (const [key, value] of Object.entries(cmdlist)) {
         command(client,value,eval(key))
       }
-    }
 })
 
 
