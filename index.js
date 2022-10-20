@@ -39,7 +39,7 @@ const client = new Client({
     ]
 })
 client.on('ready', () =>{
-    console.log('bot is ready')
+    console.log('bot is ready lol')
     for (const [category,cat_commands] of Object.entries(cmdlist)) {
     for (const [key, value] of Object.entries(cat_commands)) {
         command(client,value,eval(key))
