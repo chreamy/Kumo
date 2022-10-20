@@ -26,7 +26,7 @@ const ping = require('./cmds/misc/ping')
 const help = require('./cmds/misc/help')
 const avatar = require('./cmds/misc/avatar')
 const servers = require('./cmds/misc/servers')
-const userinfo = require('./cmds/misc/userinfo')
+const userinfo = require('./cmds/misc/userinfo') 
 const spam = require('./cmds/fun/spam')
 const changeprefix = require('./cmds/util/changeprefix')
 //         end cmd list
