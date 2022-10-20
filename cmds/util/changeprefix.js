@@ -1,4 +1,4 @@
-//const prefix = require('discord-prefix');
+const prefix = require('discord-prefix');
 module.exports = (client,message,args) => {
     const Embed = {
         color: 0xA8CFFF,
@@ -8,7 +8,7 @@ module.exports = (client,message,args) => {
         Embed.description=`***Error:** No prefix provided*`
         message.channel.send({ embeds: [Embed] })
         return}
-    //prefix.setPrefix(args[0], message.guild.id);
+    prefix.setPrefix(args[0], message.guild.id);
     Embed.description=`*Prefix changed successfully to* \`${args[0]}\``
     message.channel.send({ embeds: [Embed] })
 }
