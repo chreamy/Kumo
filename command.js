@@ -1,4 +1,4 @@
-const prefix = require('discord-prefix');
+//const prefix = require('discord-prefix');
 let defaultPrefix = '!';
 module.exports.command = (client, aliases, callback) => {
     if(typeof aliases === 'string'){
@@ -6,7 +6,7 @@ module.exports.command = (client, aliases, callback) => {
     }
     client.on('messageCreate',message =>{
         if (!message.guild) return;
-        let guildPrefix = prefix.getPrefix(message.guild.id);
+        let guildPrefix = '!'//prefix.getPrefix(message.guild.id);
         if (!guildPrefix) guildPrefix = defaultPrefix;
         let args = message.content.slice(guildPrefix.length).split(' ');
         args = args.filter(element => {if (Object.keys(element).length !== 0) {return true;}return false;})
