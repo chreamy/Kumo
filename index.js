@@ -40,7 +40,7 @@ const client = new Client({
 })
 client.on('ready', () =>{
     console.log('bot is ready')
-    client.channels.fetch('1032042520089210953')
+    client.channels.fetch('1032596705201356810')
     .then(channel=>channel.send('Back Online'))
     for (const [category,cat_commands] of Object.entries(cmdlist)) {
     for (const [key, value] of Object.entries(cat_commands)) {
