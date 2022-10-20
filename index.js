@@ -44,7 +44,7 @@ client.on('ready', async () =>{
     //await new testSchema({
     //    message: 'hello world'
     //}).save()
-    console.log('bot ready')
+    console.log('bot is ready')
     for (const [category,cat_commands] of Object.entries(cmdlist)) {
     for (const [key, value] of Object.entries(cat_commands)) {
         command(client,value,eval(key))
