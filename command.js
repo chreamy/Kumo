@@ -1,6 +1,6 @@
 //const prefix = require('discord-prefix');
 let defaultPrefix = '!';
-module.exports.command = (client, aliases, callback) => {
+module.exports.command = async (client, aliases, callback) => {
     if(typeof aliases === 'string'){
         aliases = [aliases]
     }
