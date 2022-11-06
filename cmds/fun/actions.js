@@ -2,11 +2,10 @@ let desc = 'Performs actions to another user'
 const axios = require('axios')
 module.exports = (client,message,args) => {
     let myuser = message.mentions.users.first() || message.author
-    if(myuser.id==1032039037990600766){message.channel.send('I\'m not doing this :P');return}
     let t = ''
-    const me = message.guild.members.cache.get(message.author.id).nickname
+    const me = message.guild.members.cache.get(message.author.id).nickname || message.author.username
     if(message.mentions.users.first()==message.author){
-        const name = message.guild.members.cache.get(myuser.id).nickname
+        const name = message.guild.members.cache.get(myuser.id).nickname || myuser.username
         const to ={
             'angry':`${me} is angry at themself`,
             'bite':`${me} bited themself`,
@@ -25,7 +24,7 @@ module.exports = (client,message,args) => {
         }
         t=to[args[0]]
     }else if(message.mentions.users.first()==myuser){
-        const name = message.guild.members.cache.get(myuser.id).nickname
+        const name = message.guild.members.cache.get(myuser.id).nickname || myuser.username
         const to ={
             'angry':`${me} is angry at ${name}`,
             'bite':`${me} bited ${name}`,
