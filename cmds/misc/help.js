@@ -1,7 +1,7 @@
 let desc = 'Displays a list of available commands'
 const {cmdlist} = require('../../index.js')
 let importdesc = null
-
+const fs = require("fs")
 
 function printcategories(){
     let out =''
@@ -17,12 +17,27 @@ function printcategories(){
     out += `\`For commands in each categories, use !help {category}\``
     return out
 }
-
 function printcmddesc(category,cmd_name){
     let out = ''
-    importdesc = require(`./../${category}/${cmd_name}.js`).desc
+    try{
+        importdesc = require(`./../${category}/${cmd_name}.js`).desc
+    }catch{
+        try{
+        importdesc = require(`./../${category}/${category}.js`).desc[`${cmd_name}`]
+        }catch{
+            importdesc = undefined
+        }
+    }
     out += '\`Purpose:\` *'+importdesc+'*\n\n'
-    importdetaildesc = require(`./../${category}/${cmd_name}.js`).detaildesc
+    try{
+        importdetaildesc = require(`./../${category}/${cmd_name}.js`).detaildesc
+    }catch{
+        try{
+            importdetaildesc = require(`./../${category}/${category}.js`).detaildesc ? require(`./../${category}/${category}.js`).detaildesc[`${cmd_name}`]:undefined
+        }catch{
+            importdetaildesc = undefined
+        }
+    }
     if(importdetaildesc!==undefined){
         out += '\`Description:\`\n'+importdetaildesc
     }
@@ -38,7 +53,15 @@ function printcommands(cat_name){
             aliases = [aliases]
         }
         funcname = key.charAt(0).toUpperCase() + key.slice(1)
-        importdesc = require(`./../${cat_name}/${key}.js`).desc
+        try{
+            importdesc = require(`./../${cat_name}/${key}.js`).desc
+        }catch{
+            try{
+                importdesc = require(`./../${cat_name}/${cat_name}.js`).desc[`${key}`]
+            }catch{
+                importdesc = undefined
+            }
+        }
         out += '**' +funcname+'**\n> '+importdesc+'\n*usage:'
         aliases.forEach(val =>{
             out += ' !'+val

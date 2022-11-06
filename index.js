@@ -13,12 +13,28 @@ const {joinguild} = require('./events/guildevents/joinguild')
 //+------------------------------------------+
 //         cmd list
 let cmdlist = {
+    'actions':{
+        'angry':'angry',
+        'bite':'bite',
+        'bored':'bored',
+        'hug':['hug','cuddle'],
+        'kill':'kill',
+        'kiss':'kiss',
+        'lick':'lick',
+        'pat':'pat',
+        'poke':'poke',
+        'pregnant':'pregnant',
+        'slap':'slap',
+        'spank':'spank',
+        'tickle':'tickle'
+    },
     'fun':{
         'spam':'spam',
-        'actions':['actions','angry','bite','bored','cuddle','hug','kill','kiss','lick','pat','poke','pregnant','slap','spank','tickle'],
     },
     'image':{
-        'discordcolor':['duotone','dt','discord','dc']
+        'discordcolor':['discordcolor','dc'],
+        'captcha':'captcha',
+        'deepfry':['deepfry','df']
     },
     'misc':{
         'ping':'ping',
@@ -45,10 +61,10 @@ const avatar = require('./cmds/user/avatar')
 const servers = require('./cmds/misc/servers')
 const userinfo = require('./cmds/user/userinfo')
 const spam = require('./cmds/fun/spam')
-const discordcolor = require('./cmds/image/discordcolor')
+const {discordcolor,deepfry,captcha} = require('./cmds/image/image')
 const porn = require('./cmds/nsfw/porn')
 const hentai = require('./cmds/nsfw/hentai')
-const actions = require('./cmds/fun/actions')
+const {angry,bite,bored,hug,kill,kiss,lick,pat,poke,pregnant,slap,spank,tickle} = require('./cmds/actions/actions')
 const changeprefix = require('./cmds/util/changeprefix')
 const messagecount = require('./cmds/user/messagecountcmd')
 //         end cmd list

@@ -1,6 +1,5 @@
-let desc = 'Performs actions to another user'
 const axios = require('axios')
-module.exports = (client,message,args) => {
+function send (message,type){
     let myuser = message.mentions.users.first() || message.author
     let t = ''
     const me = message.guild.members.cache.get(message.author.id).nickname || message.author.username
@@ -22,7 +21,7 @@ module.exports = (client,message,args) => {
             'spank':`${me} spanked themself`,
             'tickle':`${me} tickled themself`,
         }
-        t=to[args[0]]
+        t=to[type]
     }else if(message.mentions.users.first()==myuser){
         const name = message.guild.members.cache.get(myuser.id).nickname || myuser.username
         const to ={
@@ -41,7 +40,7 @@ module.exports = (client,message,args) => {
             'spank':`${me} spanked ${name}`,
             'tickle':`${me} tickled ${name}`,
         }
-        t=to[args[0]]
+        t=to[type]
     }else{
         const self ={
             'angry':`${me} is angry`,
@@ -59,17 +58,10 @@ module.exports = (client,message,args) => {
             'spank':`${me} wants to get spanked`,
             'tickle':`${me} wants to tickle someone`,
         }
-        t=self[args[0]]
+        t=self[type]
     }
-    let key = args[0]
-    if(args[0]=='hug')key='cuddle'
-    if(args[0]=='actions'){
-        const Embed = {
-        color: 0xFFFFFE,
-        description : "use any actions from:\n*!bite !bored !cuddle !hug !kill !kiss !lick !pat !poke !pregnant !slap !spank !tickle*"
-    }
-    message.channel.send({ embeds: [Embed] });
-    return}
+    let key = type
+    if(type=='hug')key='cuddle'
     try {
     axios.get(`https://api.satou-chan.xyz/api/endpoint/${key}`)
 				.then(res => {
@@ -84,4 +76,31 @@ module.exports = (client,message,args) => {
         if (message.deletable) message.delete();
     }
 }
-module.exports.desc = desc
+const angry = (client,message,args)=>{send(message,'angry')} 
+const bored = (client,message,args)=>{send(message,'bored')} 
+const bite = (client,message,args)=>{send(message,'bite')} 
+const hug = (client,message,args)=>{send(message,'hug')} 
+const kill = (client,message,args)=>{send(message,'kill')} 
+const kiss = (client,message,args)=>{send(message,'kiss')} 
+const lick = (client,message,args)=>{send(message,'lick')} 
+const pat = (client,message,args)=>{send(message,'pat')} 
+const poke = (client,message,args)=>{send(message,'poke')} 
+const pregnant = (client,message,args)=>{send(message,'pregnant')} 
+const slap = (client,message,args)=>{send(message,'slap')} 
+const spank = (client,message,args)=>{send(message,'spank')} 
+const tickle = (client,message,args)=>{send(message,'tickle')} 
+module.exports = {angry,bite,bored,hug,kill,kiss,lick,pat,poke,pregnant,slap,spank,tickle}
+module.exports.desc = {'angry':`Show that you're angry`,
+'bite':`@someone to bite`,
+'bored':`Express your boredom`,
+'hug':`@someone to hug`,
+'kill':`@someone to kill`,
+'kiss':`@someone to kiss`,
+'lick':`@someone to lick`,
+'pat':`@someone to pat`,
+'poke':`@someone to poke`,
+'pregnant':`Make @someone pregnant`,
+'slap':`@someone to slap`,
+'spank':`@someone to spank`,
+'tickle':`@someone to tickle`,}
+module.exports.detaileddesc = {}
