@@ -1,5 +1,5 @@
-//const prefix = require('discord-prefix');
-module.exports = (client,message,args) => {
+const guildSchema = require("../../schemas/guild-schema")
+module.exports = async (client,message,args) => {
     const Embed = {
         color: 0xA8CFFF,
         description:''
@@ -8,7 +8,7 @@ module.exports = (client,message,args) => {
         Embed.description=`***Error:** No prefix provided*`
         message.channel.send({ embeds: [Embed] })
         return}
-    //prefix.setPrefix(args[0], message.guild.id);
+    await guildSchema.findOneAndUpdate({id:message.guild.id},{prefix:args[0]},{upsert:false})
     Embed.description=`*Prefix changed successfully to* \`${args[0]}\``
     message.channel.send({ embeds: [Embed] })
 }

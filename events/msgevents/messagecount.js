@@ -1,4 +1,4 @@
-const userDataSchema = require("../schemas/userdata-schema")
+const userDataSchema = require("../../schemas/userdata-schema")
 
 module.exports.messagecount = async (message)=> {
     await userDataSchema.findOneAndUpdate({

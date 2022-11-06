@@ -8,6 +8,11 @@ const userDataSchema = new Schema({
     messageCount:{
         type: Number,
         required: true
+    },
+    level:{
+        type: Number,
+        required: true,
+        default: 1,
     }
 });
 const name = "userdata";

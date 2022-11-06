@@ -1,11 +1,11 @@
 //+------------------------------------------+
 //         events list
-const {repeat} = require("./events/repeat")
-const {messagecount} = require("./events/messagecount")
+const {repeat} = require("./msgevents/repeat")
+const {messagecount} = require("./msgevents/messagecount")
 //         end event list
 //+------------------------------------------+
 
-module.exports.events = (message) =>{
+module.exports.msgevents = (message) =>{
     repeat(message)
     messagecount(message)
 }
