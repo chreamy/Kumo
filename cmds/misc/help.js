@@ -6,7 +6,7 @@ let importdesc = null
 function printcategories(){
     let out =''
     for (const [category, cat_commands] of Object.entries(cmdlist)) {
-        if(category!='set'){
+        if(category!='nsfw'){
         out += '**'+category.toUpperCase()+'**\n\`'
         for (const [key, value] of Object.entries(cat_commands)) {
             out += key+' '

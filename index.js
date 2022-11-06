@@ -30,13 +30,10 @@ let cmdlist = {
     'util':{
         'changeprefix':['changeprefix','prefix']
     },
-    'nsfw':{
-        'porn':['porn','nsfw'],
-        'hentai':'hentai',
-    },
-    'set':{
-        
-    }
+    'nsfw':{   
+            'porn':['porn','nsfw'],
+            'hentai':'hentai',
+        },
 }
 exports.cmdlist = cmdlist
 const ping = require('./cmds/misc/ping')
