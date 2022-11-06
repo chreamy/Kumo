@@ -17,6 +17,9 @@ let cmdlist = {
         'spam':'spam',
         'actions':['actions','angry','bite','bored','cuddle','hug','kill','kiss','lick','pat','poke','pregnant','slap','spank','tickle'],
     },
+    'image':{
+        'discordcolor':['duotone','dt','discord','dc']
+    },
     'misc':{
         'ping':'ping',
         'help':['help','h'],
@@ -42,6 +45,7 @@ const avatar = require('./cmds/user/avatar')
 const servers = require('./cmds/misc/servers')
 const userinfo = require('./cmds/user/userinfo')
 const spam = require('./cmds/fun/spam')
+const discordcolor = require('./cmds/image/discordcolor')
 const porn = require('./cmds/nsfw/porn')
 const hentai = require('./cmds/nsfw/hentai')
 const actions = require('./cmds/fun/actions')
