@@ -8,7 +8,8 @@ module.exports = async (client,message,args) => {
         Embed.description=`***Error:** No prefix provided*`
         message.channel.send({ embeds: [Embed] })
         return}
-    await guildSchema.findOneAndUpdate({id:message.guild.id},{prefix:args[1]},{upsert:false})
+
+    await guildSchema.findOneAndUpdate({_id:message.guild.id},{prefix:args[1]},{upsert:true})
     Embed.description=`*Prefix changed successfully to* \`${args[1]}\``
     message.channel.send({ embeds: [Embed] })
 }
