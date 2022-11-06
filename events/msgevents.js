@@ -5,7 +5,7 @@ const {messagecount} = require("./msgevents/messagecount")
 //         end event list
 //+------------------------------------------+
 
-module.exports.msgevents = (message) =>{
+module.exports.msgevents = async (message) =>{
     repeat(message)
     messagecount(message)
 }

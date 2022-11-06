@@ -14,7 +14,8 @@ const {joinguild} = require('./events/guildevents/joinguild')
 //         cmd list
 let cmdlist = {
     'fun':{
-        'spam':'spam'
+        'spam':'spam',
+        'actions':['actions','angry','bite','bored','cuddle','hug','kill','kiss','lick','pat','poke','pregnant','slap','spank','tickle'],
     },
     'misc':{
         'ping':'ping',
@@ -28,6 +29,13 @@ let cmdlist = {
     },
     'util':{
         'changeprefix':['changeprefix','prefix']
+    },
+    'nsfw':{
+        'porn':['porn','nsfw'],
+        'hentai':'hentai',
+    },
+    'set':{
+        
     }
 }
 exports.cmdlist = cmdlist
@@ -37,6 +45,9 @@ const avatar = require('./cmds/user/avatar')
 const servers = require('./cmds/misc/servers')
 const userinfo = require('./cmds/user/userinfo')
 const spam = require('./cmds/fun/spam')
+const porn = require('./cmds/nsfw/porn')
+const hentai = require('./cmds/nsfw/hentai')
+const actions = require('./cmds/fun/actions')
 const changeprefix = require('./cmds/util/changeprefix')
 const messagecount = require('./cmds/user/messagecountcmd')
 //         end cmd list
@@ -60,9 +71,13 @@ client.on('ready', async () =>{
 
 client.on('messageCreate', async message =>{
     if (!message.guild) return;
-    const guild = await guildSchema.findOne({_id:message.guild.id})
-    guildPrefix = guild.prefix
+    if (message.author == client.user) return;
+    if (message.author.bot) return;
+    msgevents(message)
+    const guilddb = await guildSchema.findOne({_id:message.guild.id})
+    guildPrefix = guilddb.prefix
     if (!guildPrefix) guildPrefix = defaultPrefix;
+    if (message.content.startsWith('<@1032039037990600766>')) message.channel.send({embeds: [{color: 0xFFFFFE,description: `Use server prefix \`${guildPrefix}\` to call commands`}]})
     let args = message.content.slice(guildPrefix.length).split(' ');
     args = args.filter(element => {if (Object.keys(element).length !== 0) {return true;}return false;})
     if (!message.content.startsWith(guildPrefix)) return;
@@ -73,10 +88,6 @@ client.on('messageCreate', async message =>{
           }
         }
 })
-
-client.on("messageCreate",  async message => {
-    message.author.id!=1032039037990600766 ?msgevents(message):null;
-});
 
 client.on("guildCreate", function(guild){
     joinguild(guild);
