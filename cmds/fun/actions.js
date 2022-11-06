@@ -27,7 +27,7 @@ module.exports = (client,message,args) => {
         const name = message.guild.members.cache.get(myuser.id).nickname || myuser.username
         const to ={
             'angry':`${me} is angry at ${name}`,
-            'bite':`${me} bited ${name}`,
+            'bite':`${me} bit ${name} (lol amy thanks for grammar correction)`,
             'bored':`${me} thinks ${name} is boring`,
             'hug':`${me} hugged ${name}`,
             'cuddle':`${me} cuddled ${name}`,
