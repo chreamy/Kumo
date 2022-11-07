@@ -78,7 +78,7 @@ module.exports = (client,message,args)=>{
         title:'',
         description: ''
     }    
-    if(args[1]!==undefined){
+    if(args[0]!==undefined){
         found = false
         for (const [category,cat_commands] of Object.entries(cmdlist)) {
             for (const [key, value] of Object.entries(cat_commands)) {
@@ -87,7 +87,7 @@ module.exports = (client,message,args)=>{
                     valuearr = [valuearr]
                 }
                 valuearr.forEach((alias)=>{
-                    if(alias===args[1]){
+                    if(alias===args[0]){
                         found = true
                         Embed.title = key.toUpperCase()
                         if(valuearr.length>1){Embed.title += ` (${valuearr.slice(1)})`}
@@ -97,14 +97,14 @@ module.exports = (client,message,args)=>{
             }
         }
         for (const [category,cat_commands] of Object.entries(cmdlist)) {
-            if(category===args[1]){
+            if(category===args[0]){
                 found = true
                 Embed.title = 'List of '+category+' commands'
-                Embed.description = printcommands(args[1])
+                Embed.description = printcommands(args[0])
             }
         }
         if(!found){
-            Embed.description = '*'+args[1]+' is not a command*'
+            Embed.description = '*'+args[0]+' is not a command*'
         }
     }else{
         Embed.title = 'Command List'

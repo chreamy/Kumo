@@ -32,9 +32,10 @@ let cmdlist = {
         'spam':'spam',
     },
     'image':{
-        'discordcolor':['discordcolor','dc'],
         'captcha':'captcha',
-        'deepfry':['deepfry','df']
+        'deepfry':['deepfry','df'],
+        'discordcolor':['discordcolor','dc'],
+        'whowouldwin' : ['whowouldwin','www'],
     },
     'misc':{
         'ping':'ping',
@@ -61,7 +62,7 @@ const avatar = require('./cmds/user/avatar')
 const servers = require('./cmds/misc/servers')
 const userinfo = require('./cmds/user/userinfo')
 const spam = require('./cmds/fun/spam')
-const {discordcolor,deepfry,captcha} = require('./cmds/image/image')
+const {whowouldwin, discordcolor,deepfry,captcha} = require('./cmds/image/image')
 const porn = require('./cmds/nsfw/porn')
 const hentai = require('./cmds/nsfw/hentai')
 const {angry,bite,bored,hug,kill,kiss,lick,pat,poke,pregnant,slap,spank,tickle} = require('./cmds/actions/actions')

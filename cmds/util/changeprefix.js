@@ -4,13 +4,13 @@ module.exports = async (client,message,args) => {
         color: 0xA8CFFF,
         description:''
     }
-    if(args[1]===undefined){
+    if(args[0]===undefined){
         Embed.description=`***Error:** No prefix provided*`
         message.channel.send({ embeds: [Embed] })
         return}
 
-    await guildSchema.findOneAndUpdate({_id:message.guild.id},{prefix:args[1]},{upsert:true})
-    Embed.description=`*Prefix changed successfully to* \`${args[1]}\``
+    await guildSchema.findOneAndUpdate({_id:message.guild.id},{prefix:args[0]},{upsert:true})
+    Embed.description=`*Prefix changed successfully to* \`${args[0]}\``
     message.channel.send({ embeds: [Embed] })
 }
 let desc = 'Changes bot prefix'

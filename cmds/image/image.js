@@ -1,5 +1,5 @@
 fetch = require('node-fetch')
-let desc = 'make pfp discord color'
+const { post } = require('axios')
 function geturl(message){
     const user = message.mentions.users.first() || message.author
     const attachment = message.attachments.first();
@@ -12,6 +12,14 @@ function geturl(message){
     }
     if (!url){url = user.displayAvatarURL()}
     return url
+}
+function geturl2(message,args){
+    if(!message.mentions.users.at(0)){message.channel.send('Invalid format');return false}
+    if(args[1]&&message.mentions.users.at(0)&&message.mentions.users.at(1)){
+        return [message.mentions.users.at(0).displayAvatarURL(),message.mentions.users.at(1).displayAvatarURL()]
+    }else{
+        return [message.author.displayAvatarURL(),message.mentions.users.at(0).displayAvatarURL()]
+    }
 }
 async function genImg(message,api){
     const msg = await message.channel.send('**generating image...** *(Dependent on file size)*')
@@ -40,8 +48,13 @@ const discordcolor = (client,message,args)=>{
     const api =`https://nekobot.xyz/api/imagegen?type=blurpify&image=${geturl(message)}`
     genImg(message,api)
 } 
-module.exports = {deepfry, captcha, discordcolor}
-module.exports.desc = {'deepfry':'Deepfry an image',
+const whowouldwin = (client,message,args)=>{
+    if(geturl2(message,args)) genImg(message,`https://nekobot.xyz/api/imagegen?type=whowouldwin&user1=${geturl2(message,args)[0]}&user2=${geturl2(message,args)[1]}`)
+} 
+module.exports = {whowouldwin, deepfry, captcha, discordcolor}
+module.exports.desc = {
+'approved':'Do check mark',
+'deepfry':'Deepfry an image',
 'discordcolor':'Make an image into discord color',
 'captcha':'Turn an image into captcha'}
 module.exports.detaileddesc = {}
