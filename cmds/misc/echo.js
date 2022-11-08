@@ -1,10 +1,12 @@
 let desc = 'Repeat Message'
-module.exports = (client,message,args) => {
-    let out = ''
-    args.forEach(element => {
-        out += element+' '
-    });
-    message.channel.send(`${out}`)
+require('discord-reply');
+module.exports = async (client,message,args) => {
+    let out = message.content.substr(message.content.indexOf(" ") + 1);
+    if(message.reference){
+        message.channel.send({ content: out, reply: { messageReference: message.reference.messageId },allowedMentions: { repliedUser: false }});
+    }else{
+        message.channel.send(`${out}`)
+    }
     if (message.deletable) message.delete();
 }
 module.exports.desc = desc
