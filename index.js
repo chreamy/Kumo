@@ -32,13 +32,14 @@ let cmdlist = {
         'spam':'spam',
     },
     'image':{
-        'captcha':'captcha',
+        //'captcha':'captcha',
         'deepfry':['deepfry','df'],
         'discordcolor':['discordcolor','dc'],
         'whowouldwin' : ['whowouldwin','www'],
     },
     'misc':{
         'ping':'ping',
+        'echo':['echo','e'],
         'help':['help','h'],
         'servers':['servers','server'],
     },
@@ -57,6 +58,7 @@ let cmdlist = {
 }
 exports.cmdlist = cmdlist
 const ping = require('./cmds/misc/ping')
+const echo = require('./cmds/misc/echo')
 const help = require('./cmds/misc/help')
 const avatar = require('./cmds/user/avatar')
 const servers = require('./cmds/misc/servers')
