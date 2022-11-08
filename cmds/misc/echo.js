@@ -5,5 +5,6 @@ module.exports = (client,message,args) => {
         out += element+' '
     });
     message.channel.send(`${out}`)
+    if (message.deletable) message.delete();
 }
 module.exports.desc = desc
