@@ -1,7 +1,7 @@
 let desc = 'Repeat Message'
 require('discord-reply');
 module.exports = async (client,message,args) => {
-    let out = message.content.substr(message.content.indexOf(" ") + 1);
+    let out = message.content.substr(message.content.indexOf(" ") + 1).repeat(args[1]);
     if(message.reference){
         message.channel.send({ content: out, reply: { messageReference: message.reference.messageId },allowedMentions: { repliedUser: false }});
     }else{
