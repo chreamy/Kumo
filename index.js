@@ -41,6 +41,7 @@ let cmdlist = {
         'ping':'ping',
         'echo':['echo','e'],
         'help':['help','h'],
+        'repeat':'repeat',
         'servers':['servers','server'],
     },
     'user':{
@@ -60,6 +61,7 @@ exports.cmdlist = cmdlist
 const ping = require('./cmds/misc/ping')
 const echo = require('./cmds/misc/echo')
 const help = require('./cmds/misc/help')
+const repeat = require('./cmds/misc/repeat')
 const avatar = require('./cmds/user/avatar')
 const servers = require('./cmds/misc/servers')
 const userinfo = require('./cmds/user/userinfo')
@@ -82,8 +84,19 @@ const client = new Client({
 })
 client.on('ready', async () =>{
     console.log('bot is ready')
+    var currentdate = new Date(); 
+    var datetime =  currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+                const Embed = {
+                    color: 0xFFFFFE,
+                    description:  `**Back Online ${datetime}**`
+                }
     client.channels.fetch('1032596705201356810')
-    .then(channel=>channel.send('**Back Online**'))
+    .then(channel=>channel.send({embeds:[Embed]}))
     mongoose.connect(process.env.MONGO_URI,{
         keepAlive: true
     })
