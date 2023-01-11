@@ -42,8 +42,7 @@ let cmdlist = {
         'echo':['echo','e'],
         'help':['help','h'],
         'repeat':'repeat',
-        'servers':['servers','server'],
-        'repeat':'repeat',
+        'servers':['servers','server']
     },
     'user':{
         'avatar':['avatar','ava'],
