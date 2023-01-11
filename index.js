@@ -43,6 +43,7 @@ let cmdlist = {
         'help':['help','h'],
         'repeat':'repeat',
         'servers':['servers','server'],
+        'repeat':'repeat',
     },
     'user':{
         'avatar':['avatar','ava'],
