@@ -61,6 +61,7 @@ exports.cmdlist = cmdlist
 const ping = require('./cmds/misc/ping')
 const echo = require('./cmds/misc/echo')
 const help = require('./cmds/misc/help')
+const repeat = require('./cmds/misc/repeat')
 const avatar = require('./cmds/user/avatar')
 const servers = require('./cmds/misc/servers')
 const userinfo = require('./cmds/user/userinfo')
