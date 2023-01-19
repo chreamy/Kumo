@@ -36,6 +36,7 @@ let cmdlist = {
         'deepfry':['deepfry','df'],
         'discordcolor':['discordcolor','dc'],
         'whowouldwin' : ['whowouldwin','www'],
+        'generate':['generate','gen']
     },
     'misc':{
         'ping':'ping',
@@ -67,6 +68,7 @@ const servers = require('./cmds/misc/servers')
 const userinfo = require('./cmds/user/userinfo')
 const spam = require('./cmds/fun/spam')
 const {whowouldwin, discordcolor,deepfry,captcha} = require('./cmds/image/image')
+const generate = require('./cmds/image/generate')
 const porn = require('./cmds/nsfw/porn')
 const hentai = require('./cmds/nsfw/hentai')
 const {angry,bite,bored,hug,kill,kiss,lick,pat,poke,pregnant,slap,spank,tickle} = require('./cmds/actions/actions')
