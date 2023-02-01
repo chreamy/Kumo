@@ -1,6 +1,6 @@
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
-  apiKey: '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',
+  apiKey: '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',
 });
 const openai = new OpenAIApi(configuration);
 let desc = 'Generates AI Image'
