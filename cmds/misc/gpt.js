@@ -29,6 +29,8 @@ module.exports = async (client,message,args) => {
       return
 		}
         msg.delete();
-    message.channel.send(des);
+    for(let i=0;i<des.length/2000;i+=1){
+    message.channel.send(des.substring(i*2000,(i+1)*2000));
+    }
 }
 module.exports.desc = desc
