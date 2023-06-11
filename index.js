@@ -39,6 +39,7 @@ let cmdlist = {
         'generate':['generate','gen']
     },
     'misc':{
+        'gpt':'gpt',
         'ping':'ping',
         'echo':['echo','e'],
         'help':['help','h'],
@@ -60,6 +61,7 @@ let cmdlist = {
 }
 exports.cmdlist = cmdlist
 const ping = require('./cmds/misc/ping')
+const gpt = require('./cmds/misc/gpt')
 const echo = require('./cmds/misc/echo')
 const help = require('./cmds/misc/help')
 const repeat = require('./cmds/misc/repeat')
