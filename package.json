@@ -18,7 +18,7 @@
     "dotenv": "^16.4.7",
     "fs": "^0.0.1-security",
     "is-valid-path": "^0.1.1",
-    "mongoose": "^8.9.4",
+    "mongoose": "^7.0.0",
     "openai": "^4.78.1",
     "pm2": "^5.4.3"
   }
