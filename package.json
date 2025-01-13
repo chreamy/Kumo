@@ -1,8 +1,4 @@
 {
-  "name": "kumo-bot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "start": "node index"
   },
@@ -10,16 +6,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "amethyste-api": "^1.1.6",
-    "anime-images-api": "^2.0.0",
     "axios": "^1.7.9",
     "discord-reply": "^0.1.2",
     "discord.js": "^14.17.3",
     "dotenv": "^16.4.7",
-    "fs": "^0.0.1-security",
-    "is-valid-path": "^0.1.1",
-    "mongoose": "^7.0.0",
-    "openai": "^4.78.1",
+    "mongoose": "^8.9.3",
+    "openai": "^4.77.0",
     "pm2": "^5.4.3"
   }
 }
