@@ -90,7 +90,11 @@ client.on("messageCreate", async (message) => {
   const gptChannelId = "1328187329344442399";
 
   // Handle events for specific channel
-  if (message.channel.id === gptChannelId) {
+  if (
+    message.channel.id === gptChannelId &&
+    !message.content.startsWith(guildPrefix) &&
+    !message.content.startsWith(">")
+  ) {
     const args = message.content.trim().split(/\s+/); // Split message content into args
     try {
       // Trigger the GPT command directly
