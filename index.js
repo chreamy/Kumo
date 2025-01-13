@@ -88,7 +88,8 @@ client.on("messageCreate", async (message) => {
   if (message.author === client.user) return;
   if (message.author.bot) return;
   const gptChannelId = "1328187329344442399";
-
+  const guilddb = await guildSchema.findOne({ _id: message.guild.id });
+  let guildPrefix = guilddb ? guilddb.prefix : defaultPrefix;
   // Handle events for specific channel
   if (
     message.channel.id === gptChannelId &&
@@ -105,9 +106,6 @@ client.on("messageCreate", async (message) => {
     return; // Prevent further processing for this message
   }
   msgevents(message);
-
-  const guilddb = await guildSchema.findOne({ _id: message.guild.id });
-  let guildPrefix = guilddb ? guilddb.prefix : defaultPrefix;
 
   if (message.content.startsWith("<@1032039037990600766>")) {
     message.channel.send({
