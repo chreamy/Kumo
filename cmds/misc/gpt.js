@@ -50,7 +50,7 @@ module.exports = async (client, message, args) => {
     const chunkSize = 2000;
     for (let i = 0; i < generatedText.length; i += chunkSize) {
       await message.channel.send(
-        "```css\n" + generatedText.slice(i, i + chunkSize) + "\n```"
+        "```ansi\n[0;31;36m" + generatedText.slice(i, i + chunkSize) + "\n```"
       );
     }
   } catch (error) {
