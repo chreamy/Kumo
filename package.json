@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node index"
+    "start": "pm2 start index.js --no-daemon"
   },
   "keywords": [],
   "author": "",

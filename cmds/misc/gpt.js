@@ -22,7 +22,7 @@ module.exports = async (client, message, args) => {
   }
 
   // Notify the user that the text is being generated
-  const msg = await message.channel.send("**Generating text...**");
+  const msg = await message.channel.send("*Thinking...*");
 
   try {
     // Define the system message for prompt engineering
