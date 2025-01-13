@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js"
+    "start": "pm2 start index.js --name discord-bot --no-daemon"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "fs": "^0.0.1-security",
     "is-valid-path": "^0.1.1",
     "mongoose": "^8.9.4",
-    "openai": "^4.78.1"
+    "openai": "^4.78.1",
+    "pm2": "^5.4.3"
   }
 }
