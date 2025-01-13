@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --name discord-bot --no-daemon"
+    "start": "node index"
   },
   "keywords": [],
   "author": "",
