@@ -1,0 +1,444 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yuna Revelation</title>
+    <style>
+      body {
+        margin: 0;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      canvas {
+        display: block;
+        background: transparent;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1;
+      }
+      .squarecontainer {
+        position: relative;
+        aspect-ratio: 1;
+        width: min(100vw, 100vh);
+        height: min(100vw, 100vh);
+        display: flex;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="squarecontainer">
+      <canvas id="layeredCanvas"></canvas>
+    </div>
+    <script>
+const traits = [
+    {
+      "name": "Background",
+      "unique": false,
+      "required": true,
+      "traits": [
+        {
+          "name": "Subway",
+          "id": "192928d350e6d6c6b25b372d58bfcbe1313efe3a608c86ac337eae2a89c29ba2i1"
+        },
+        {
+          "name": "Mempool",
+          "id": "192928d350e6d6c6b25b372d58bfcbe1313efe3a608c86ac337eae2a89c29ba2i0"
+        },
+        {
+          "name": "Station",
+          "id": "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi1"
+        },
+        {
+          "name": "DOGE",
+          "id": "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi0"
+        },
+        {
+          "name": "Whitepaper",
+          "id": "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi6"
+        },
+        {
+          "name": "Spaceport",
+          "id": "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi4"
+        },
+        {
+          "name": "Matrix",
+          "id": "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi5"
+        },
+        {
+          "name": "Snow",
+          "id": "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi3"
+        },
+        {
+          "name": "Palace",
+          "id": "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi2"
+        }
+      ]
+    },
+    {
+      "name": "Body",
+      "unique": true,
+      "required": true,
+      "traits": [
+        {
+          "name": "Classic",
+          "id": "6df15f10b4fed1dbd291eb91a7cbbc527d45a01ce20451aae895aa94565ca75ai2"
+        },
+        {
+          "name": "Lilac",
+          "id": "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi4"
+        },
+        {
+          "name": "Rust",
+          "id": "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi0"
+        },
+        {
+          "name": "Azure",
+          "id": "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi1"
+        },
+        {
+          "name": "Alien",
+          "id": "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi2"
+        },
+        {
+          "name": "Lime",
+          "id": "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi3"
+        },
+        {
+          "name": "Mystic",
+          "id": "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi5"
+        },
+        {
+          "name": "Neko",
+          "id": "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i1"
+        },
+        {
+          "name": "Devil",
+          "id": "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i2"
+        },
+        {
+          "name": "Aloof",
+          "id": "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i3"
+        },
+        {
+          "name": "Nova",
+          "id": "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i4"
+        },
+        {
+          "name": "Crimson",
+          "id": "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i5"
+        },
+        {
+          "name": "Sakura",
+          "id": "b754d6d2707dba2ba8ebf051a947a729d93c30fe08ce699bb82d71625bc7d9e8i0"
+        }
+      ]
+    },
+    {
+      "name": "Outfit",
+      "unique": true,
+      "required": true,
+      "traits": [
+        {
+          "name": "Normie",
+          "id": "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi2"
+        },
+        {
+          "name": "Mono Glitch",
+          "id": "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i0"
+        },
+        {
+          "name": "RunesDev",
+          "id": "6df15f10b4fed1dbd291eb91a7cbbc527d45a01ce20451aae895aa94565ca75ai0"
+        },
+        {
+          "name": "Satoshi",
+          "id": "6df15f10b4fed1dbd291eb91a7cbbc527d45a01ce20451aae895aa94565ca75ai3"
+        },
+        {
+          "name": "Professor X",
+          "id": "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi1"
+        },
+        {
+          "name": "Yucci",
+          "id": "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi0"
+        },
+        {
+          "name": "Nuclear",
+          "id": "51b7fda6dad95974d2dd73e34e2e3cc0b23d4851233c60282f4880fae6999396i1"
+        },
+        {
+          "name": "Fugitive",
+          "id": "51b7fda6dad95974d2dd73e34e2e3cc0b23d4851233c60282f4880fae6999396i2"
+        },
+        {
+          "name": "69",
+          "id": "51b7fda6dad95974d2dd73e34e2e3cc0b23d4851233c60282f4880fae6999396i3"
+        },
+        {
+          "name": "Tux",
+          "id": "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi2"
+        },
+        {
+          "name": "Hoodie",
+          "id": "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i5"
+        },
+        {
+          "name": "McB",
+          "id": "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i0"
+        },
+        {
+          "name": "Purradox",
+          "id": "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i6"
+        },
+        {
+          "name": "NodeRunner",
+          "id": "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i7"
+        },
+        {
+          "name": "Pimp",
+          "id": "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi0"
+        }
+      ]
+    },
+    {
+      "name": "Accessories",
+      "unique": true,
+      "required": false,
+      "traits": [
+        {
+          "name": "Runestone",
+          "id": "51b7fda6dad95974d2dd73e34e2e3cc0b23d4851233c60282f4880fae6999396i0"
+        },
+        {
+          "name": "Jeet3000",
+          "id": "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi1"
+        },
+        {
+          "name": "Catify",
+          "id": "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi3"
+        },
+        {
+          "name": "Gizmo",
+          "id": "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi5"
+        },
+        {
+          "name": "Wizard",
+          "id": "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi6"
+        },
+        {
+          "name": "Lightsaber",
+          "id": "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi7"
+        },
+        {
+          "name": "Pizza",
+          "id": "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i1"
+        },
+        {
+          "name": "Halo",
+          "id": "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i2"
+        },
+        {
+          "name": "Pooky",
+          "id": "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i4"
+        },
+        {
+          "name": "Dual Wield",
+          "id": "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi3"
+        },
+        {
+          "name": "Joint",
+          "id": "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi6"
+        }
+      ]
+    },
+    {
+      "name": "Eyewear",
+      "unique": true,
+      "required": false,
+      "traits": [
+        {
+          "name": "Vision Bro",
+          "id": "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi5"
+        },
+        {
+          "name": "Vipers",
+          "id": "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi4"
+        },
+        {
+          "name": "Monocle",
+          "id": "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi7"
+        },
+        {
+          "name": "Black Eyes",
+          "id": "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i3"
+        },
+        {
+          "name": "Laser Maxi",
+          "id": "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi4"
+        }
+      ]
+    }
+  ]
+
+      function getTraitBySeed(seed, category) {
+        const traitCategory = traits.find(t => t.name === category);
+        if (!traitCategory) return null;
+
+        if (category === "Background") {
+          const totalOptions = traitCategory.traits.length + 2; 
+          const selection = seed % totalOptions;
+          if (selection === totalOptions - 2) return "matrix";
+          if (selection === totalOptions - 1) return "orange";
+          return selection < traitCategory.traits.length ? traitCategory.traits[selection].id : null;
+        }
+        const totalOptions = traitCategory.required ? traitCategory.traits.length : traitCategory.traits.length + 1;
+        const selection = seed % totalOptions;
+        return selection < traitCategory.traits.length ? traitCategory.traits[selection].id : null;
+      }
+
+      const totalCombinations = 154440;
+        const seed = window.REVELATION_SEED || 43;
+        const normalizedSeed = seed % totalCombinations;
+      const bgSeed = normalizedSeed % (traits[0].traits.length + 2); 
+      const bodySeed = Math.floor(normalizedSeed / (traits[0].traits.length + 2)) % traits[1].traits.length;
+      const outfitSeed = Math.floor(normalizedSeed / ((traits[0].traits.length + 2) * traits[1].traits.length)) % (traits[2].traits.length );
+      const accessoriesSeed = Math.floor(normalizedSeed / ((traits[0].traits.length + 2) * traits[1].traits.length * (traits[2].traits.length ))) % (traits[3].traits.length + 1);
+      const eyewearSeed = Math.floor(normalizedSeed / ((traits[0].traits.length + 2) * traits[1].traits.length * (traits[2].traits.length ) * (traits[3].traits.length + 1))) % (traits[4].traits.length + 1);
+
+      const bgId = getTraitBySeed(bgSeed, "Background");
+      const bodyId = getTraitBySeed(bodySeed, "Body");
+      const outfitId = getTraitBySeed(outfitSeed, "Outfit");
+      const accessoryId = getTraitBySeed(accessoriesSeed, "Accessories");
+      const eyewearId = getTraitBySeed(eyewearSeed, "Eyewear");
+      const bgUrl = bgId === "matrix" 
+        ? null 
+        : bgId === "orange"
+          ? null 
+          : `https://ordinals.com/content/${bgId}`;
+      const bodyUrl = `https://ordinals.com/content/${bodyId}`;
+      const outfitUrl = outfitId ? `https://ordinals.com/content/${outfitId}` : null;
+      const accessoryUrl = accessoryId ? `https://ordinals.com/content/${accessoryId}` : null;
+      const eyewearUrl = eyewearId ? `https://ordinals.com/content/${eyewearId}` : null;
+      const imageUrls = [bgUrl, bodyUrl, outfitUrl, accessoryUrl, eyewearUrl].filter(url => url !== null);
+      const images = [];
+      let loaded = 0;
+      if (bgId === "matrix") {
+        const charCanvas = document.createElement('canvas');
+        charCanvas.width = window.innerWidth;
+        charCanvas.height = window.innerHeight;
+        const size = Math.min(window.innerWidth, window.innerHeight);
+        charCanvas.style.position = 'absolute';
+        charCanvas.style.top = '0';
+        charCanvas.style.left = '0';
+        charCanvas.style.zIndex = '-1';
+        const charCtx = charCanvas.getContext('2d');
+        const fontSize = Math.floor(size/25);
+        const columns = Math.floor(window.innerWidth / fontSize);
+        const drops = new Array(columns).fill(0);
+        
+        function drawMatrix() {
+          charCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+          charCtx.fillRect(0, 0, charCanvas.width, charCanvas.height);
+          
+          charCtx.fillStyle = '#0F0';
+          charCtx.font = fontSize + 'px monospace';
+          
+          for (let i = 0; i < drops.length; i++) {
+            const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+            charCtx.fillText(text, i * fontSize, drops[i] * fontSize,);
+            
+            if (drops[i] * fontSize > charCanvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+            drops[i]++;
+          }
+          requestAnimationFrame(drawMatrix);
+        }
+        drawMatrix();
+        document.body.insertBefore(charCanvas, document.body.firstChild);
+      }
+
+      if (bgId === "orange") {
+        document.body.style.background = "#FF5500";
+      }
+
+      imageUrls.forEach((url, i) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = url;
+        img.onload = () => {
+          images[i] = img;
+          loaded++;
+          if (loaded === imageUrls.length) {
+            drawLayers();
+          }
+        };
+      });
+
+      function drawLayers() {
+        const width = [0,2,3,8,10,11].includes(bodySeed)?720:1080;
+        const height = width;
+        const canvas = document.getElementById("layeredCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = width;
+        canvas.height = height;
+        const offCanvas = document.createElement("canvas");
+        offCanvas.width = width;
+        offCanvas.height = height;
+        const offCtx = offCanvas.getContext("2d");
+        images.forEach(img => {
+          offCtx.drawImage(img, 0, 0, width, height);
+        });
+        const originalImageData = offCtx.getImageData(0, 0, width, height);
+        function drawPixelated() {
+          const pixelX = 55;
+          const pixelY = 55;
+          const blockW = Math.ceil(width / pixelX);
+          const blockH = Math.ceil(height / pixelY);
+          const offImageData = offCtx.getImageData(0, 0, width, height).data;
+          ctx.clearRect(0, 0, width, height);
+          for (let y = 0; y < pixelY; y++) {
+            for (let x = 0; x < pixelX; x++) {
+              const sx = Math.floor((x + 0.5) * blockW);
+              const sy = Math.floor((y + 0.5) * blockH);
+              const idx = (Math.min(sy, height - 1) * width + Math.min(sx, width - 1)) * 4;
+              const r = offImageData[idx];
+              const g = offImageData[idx + 1];
+              const b = offImageData[idx + 2];
+              const a = offImageData[idx + 3] / 255;
+
+              // Only draw block if center is not transparent
+              if (a > 0) {
+                ctx.globalAlpha = a;
+                ctx.fillStyle = `rgb(${r},${g},${b})`;
+                ctx.fillRect(x * blockW, y * blockH, blockW, blockH);
+              }
+            }
+          }
+          ctx.globalAlpha = 1.0;
+        }
+        function drawOriginal() {
+          ctx.putImageData(originalImageData, 0, 0);
+        }
+        drawPixelated();
+        window.addEventListener('keydown', (e) => {
+          if (e.code === 'Space' && !e.repeat) {
+            e.preventDefault();
+            drawOriginal();
+          }
+        });
+
+        window.addEventListener('keyup', (e) => {
+          if (e.code === 'Space') {
+            e.preventDefault();
+            drawPixelated();
+          }
+        });
+      }
+    </script>
+  </body>
+</html> 
