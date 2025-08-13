@@ -14,24 +14,28 @@ const { joinguild } = require("./events/guildevents/joinguild");
 //+------------------------------------------+
 //         cmd list
 let cmdlist = {
-  fun: {
-    spam: "spam",
-  },
+  // fun: {
+  //   spam: "spam",
+  // },
   misc: {
-    gpt: "gpt",
-    ping: "ping",
+    // gpt: "gpt",
+    // ping: "ping",
     echo: ["echo", "e"],
     help: ["help", "h"],
-    servers: ["servers", "server"],
+    // servers: ["servers", "server"]
   },
-  user: {
-    avatar: ["avatar", "ava"],
-    userinfo: ["userinfo", "ui", "info", "getuser", "gu"],
-    messagecount: ["messagecount", "mc"],
+  yuna: {
+    genyuna: "genyuna",
+    yuna: ["yuna", "y"]
   },
-  util: {
-    changeprefix: ["changeprefix", "prefix"],
-  },
+  // user: {
+  //   avatar: ["avatar", "ava"],
+  //   userinfo: ["userinfo", "ui", "info", "getuser", "gu"],
+  //   messagecount: ["messagecount", "mc"],
+  // },
+  // util: {
+  //   changeprefix: ["changeprefix", "prefix"],
+  // },
 };
 exports.cmdlist = cmdlist;
 
@@ -45,6 +49,8 @@ const servers = require("./cmds/misc/servers");
 const userinfo = require("./cmds/user/userinfo");
 const spam = require("./cmds/fun/spam");
 const generate = require("./cmds/image/generate");
+const genyuna = require("./cmds/yuna/genyuna");
+const yuna = require("./cmds/yuna/yuna");
 
 const changeprefix = require("./cmds/util/changeprefix");
 const messagecount = require("./cmds/user/messagecountcmd");
