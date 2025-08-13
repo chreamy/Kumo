@@ -5,7 +5,9 @@ const sharp = require('sharp');
 const { drawMatrixBackground } = require('./matrix_helper');
 const { pixelateImage } = require('./pixel_helper');
 const { createAnimatedGif } = require('./gif_helper');
+const { getLocalImagePath, getTraitName } = require('./image_helper');
 const combinedData = require('./combined_data.json');
+const path = require('path');
 
 let desc = 'Show a specific Yuna NFT by number (1-3333)';
 
@@ -349,26 +351,48 @@ module.exports = async (client, message, args) => {
             ctx.fillRect(0, 0, width, height);
         }
 
-        // Load and draw images
-        const imageUrls = [
-            bgId && bgId !== "matrix" && bgId !== "orange" ? `https://ordinals.com/content/${bgId}` : null,
-            bodyId ? `https://ordinals.com/content/${bodyId}` : null,
-            outfitId ? `https://ordinals.com/content/${outfitId}` : null,
-            accessoryId ? `https://ordinals.com/content/${accessoryId}` : null,
-            eyewearId ? `https://ordinals.com/content/${eyewearId}` : null
-        ].filter(url => url !== null);
+        // Get trait names and load images
+        const bgName = bgId === "matrix" ? "Matrix" : 
+                      bgId === "orange" ? "Orange" : 
+                      getTraitName(traits, "Background", bgId);
+        const bodyName = getTraitName(traits, "Body", bodyId);
+        const outfitName = getTraitName(traits, "Outfit", outfitId);
+        const accessoryName = getTraitName(traits, "Accessories", accessoryId);
+        const eyewearName = getTraitName(traits, "Eyewear", eyewearId);
 
-        // Fetch and draw each image
-        for (const url of imageUrls) {
-            try {
-                const imageBuffer = await fetchImage(url);
-                if (imageBuffer) {
-                    const img = await loadImage(imageBuffer);
-                    ctx.drawImage(img, 0, 0, width, height);
-                }
-            } catch (error) {
-                console.error(`Failed to process image from ${url}:`, error);
+        // Load and draw images
+        try {
+            // Background
+            if (bgId && bgId !== "matrix" && bgId !== "orange") {
+                const img = await loadImage(getLocalImagePath("Background", bgName));
+                ctx.drawImage(img, 0, 0, width, height);
             }
+
+            // Body
+            if (bodyName !== "None") {
+                const img = await loadImage(getLocalImagePath("Body", bodyName));
+                ctx.drawImage(img, 0, 0, width, height);
+            }
+
+            // Outfit
+            if (outfitName !== "None") {
+                const img = await loadImage(getLocalImagePath("Outfit", outfitName));
+                ctx.drawImage(img, 0, 0, width, height);
+            }
+
+            // Accessories
+            if (accessoryName !== "None") {
+                const img = await loadImage(getLocalImagePath("Accessories", accessoryName));
+                ctx.drawImage(img, 0, 0, width, height);
+            }
+
+            // Eyewear
+            if (eyewearName !== "None") {
+                const img = await loadImage(getLocalImagePath("Eyewear", eyewearName));
+                ctx.drawImage(img, 0, 0, width, height);
+            }
+        } catch (error) {
+            console.error('Failed to load or draw image:', error);
         }
 
         // Save the original version
@@ -386,14 +410,7 @@ module.exports = async (client, message, args) => {
         const buffer = await createAnimatedGif(originalCanvas, pixelatedCanvas);
         const attachment = new AttachmentBuilder(buffer, { name: `yuna-${number}.gif` });
 
-        // Get trait names for the embed
-        const bgName = bgId === "matrix" ? "Matrix" : 
-                      bgId === "orange" ? "Orange" : 
-                      traits[0].traits.find(t => t.id === bgId)?.name || "None";
-        const bodyName = traits[1].traits.find(t => t.id === bodyId)?.name || "None";
-        const outfitName = traits[2].traits.find(t => t.id === outfitId)?.name || "None";
-        const accessoryName = traits[3].traits.find(t => t.id === accessoryId)?.name || "None";
-        const eyewearName = traits[4].traits.find(t => t.id === eyewearId)?.name || "None";
+        // Trait names already retrieved above
 
         await loadingMsg.delete();
         // Create the Magic Eden button

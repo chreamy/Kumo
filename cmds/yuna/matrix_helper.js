@@ -1,3 +1,12 @@
+const { createCanvas } = require('canvas');
+
+function createMatrixBackground(width, height) {
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext('2d');
+    drawMatrixBackground(ctx, width, height);
+    return canvas;
+}
+
 function drawMatrixBackground(ctx, width, height) {
     // Clear background to black first
     ctx.fillStyle = '#000000';
@@ -31,4 +40,4 @@ function drawMatrixBackground(ctx, width, height) {
     
 }
 
-module.exports = { drawMatrixBackground };
+module.exports = { drawMatrixBackground, createMatrixBackground };
