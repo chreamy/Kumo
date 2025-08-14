@@ -1,0 +1,44 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+.python-version
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Code editors
+.vscode
+
+# Log files
+*.log
+
+# Test Coverage report
+.coverage
+
+# Output files from scripts
+testset*.csv
+score_real_collections_results*.json
+
+# Local cache files
+cached_data/*.json
+cached_data/*/*.json
+
+poetry.lock
