@@ -1,311 +1,19 @@
 const { createCanvas, loadImage } = require("canvas");
+const traits = require("./genyuna").traits;
 const {
     AttachmentBuilder,
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
 } = require("discord.js");
-const fetch = require("node-fetch");
-const sharp = require("sharp");
+const { getLocalImagePath, getTraitName } = require("./image_helper");
+const { getRarityInfo } = require("./rarity_helper");
 const { pixelateImage } = require("./pixel_helper");
 const { createAnimatedGif } = require("./gif_helper");
-const { getLocalImagePath, getTraitName } = require("./image_helper");
 const combinedData = require("./combined_data.json");
 const path = require("path");
 
 let desc = "Show a specific Yuna NFT by number (1-3333)";
-
-// Trait data from pixel.html
-const traits = [
-    {
-        name: "Background",
-        unique: false,
-        required: true,
-        traits: [
-            {
-                name: "Subway",
-                id: "192928d350e6d6c6b25b372d58bfcbe1313efe3a608c86ac337eae2a89c29ba2i1",
-            },
-            {
-                name: "Mempool",
-                id: "192928d350e6d6c6b25b372d58bfcbe1313efe3a608c86ac337eae2a89c29ba2i0",
-            },
-            {
-                name: "Station",
-                id: "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi1",
-            },
-            {
-                name: "DOGE",
-                id: "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi0",
-            },
-            {
-                name: "Whitepaper",
-                id: "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi6",
-            },
-            {
-                name: "Spaceport",
-                id: "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi4",
-            },
-            {
-                name: "Lab",
-                id: "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi5",
-            },
-            {
-                name: "Snow",
-                id: "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi3",
-            },
-            {
-                name: "Palace",
-                id: "269db3602e28496586ea5a218453bed44ae95caecbfb6707ba2866626ade609bi2",
-            },
-        ],
-    },
-    {
-        name: "Body",
-        unique: true,
-        required: true,
-        traits: [
-            {
-                name: "Classic",
-                id: "6df15f10b4fed1dbd291eb91a7cbbc527d45a01ce20451aae895aa94565ca75ai2",
-            },
-            {
-                name: "Lilac",
-                id: "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi4",
-            },
-            {
-                name: "Rust",
-                id: "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi0",
-            },
-            {
-                name: "Azure",
-                id: "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi1",
-            },
-            {
-                name: "Alien",
-                id: "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi2",
-            },
-            {
-                name: "Lime",
-                id: "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi3",
-            },
-            {
-                name: "Mystic",
-                id: "d2e411b59414faf001a88bc6508db4f7142fceaed0f535b7c140b8cef714cbadi5",
-            },
-            {
-                name: "Neko",
-                id: "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i1",
-            },
-            {
-                name: "Devil",
-                id: "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i2",
-            },
-            {
-                name: "Aloof",
-                id: "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i3",
-            },
-            {
-                name: "Nova",
-                id: "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i4",
-            },
-            {
-                name: "Crimson",
-                id: "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i5",
-            },
-            {
-                name: "Sakura",
-                id: "b754d6d2707dba2ba8ebf051a947a729d93c30fe08ce699bb82d71625bc7d9e8i0",
-            },
-        ],
-    },
-    {
-        name: "Outfit",
-        unique: true,
-        required: true,
-        traits: [
-            {
-                name: "Normie",
-                id: "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi2",
-            },
-            {
-                name: "Mono Glitch",
-                id: "7b07ae640b9bce91014ad16badc8f99ab18865b08343b7765cccf37102d7d858i0",
-            },
-            {
-                name: "RunesDev",
-                id: "6df15f10b4fed1dbd291eb91a7cbbc527d45a01ce20451aae895aa94565ca75ai0",
-            },
-            {
-                name: "Satoshi",
-                id: "6df15f10b4fed1dbd291eb91a7cbbc527d45a01ce20451aae895aa94565ca75ai3",
-            },
-            {
-                name: "Professor X",
-                id: "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi1",
-            },
-            {
-                name: "Yucci",
-                id: "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi0",
-            },
-            {
-                name: "Nuclear",
-                id: "51b7fda6dad95974d2dd73e34e2e3cc0b23d4851233c60282f4880fae6999396i1",
-            },
-            {
-                name: "Fugitive",
-                id: "51b7fda6dad95974d2dd73e34e2e3cc0b23d4851233c60282f4880fae6999396i2",
-            },
-            {
-                name: "69",
-                id: "51b7fda6dad95974d2dd73e34e2e3cc0b23d4851233c60282f4880fae6999396i3",
-            },
-            {
-                name: "Tux",
-                id: "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi2",
-            },
-            {
-                name: "Hoodie",
-                id: "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i5",
-            },
-            {
-                name: "McB",
-                id: "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i0",
-            },
-            {
-                name: "Purradox",
-                id: "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i6",
-            },
-            {
-                name: "NodeRunner",
-                id: "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i7",
-            },
-            {
-                name: "Pimp",
-                id: "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi0",
-            },
-        ],
-    },
-    {
-        name: "Accessories",
-        unique: true,
-        required: false,
-        traits: [
-            {
-                name: "Runestone",
-                id: "51b7fda6dad95974d2dd73e34e2e3cc0b23d4851233c60282f4880fae6999396i0",
-            },
-            {
-                name: "Jeet3000",
-                id: "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi1",
-            },
-            {
-                name: "Catify",
-                id: "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi3",
-            },
-            {
-                name: "Gizmo",
-                id: "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi5",
-            },
-            {
-                name: "Wizard",
-                id: "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi6",
-            },
-            {
-                name: "Lightsaber",
-                id: "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi7",
-            },
-            {
-                name: "Pizza",
-                id: "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i1",
-            },
-            {
-                name: "Halo",
-                id: "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i2",
-            },
-            {
-                name: "Pooky",
-                id: "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i4",
-            },
-            {
-                name: "Dual Wield",
-                id: "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi3",
-            },
-            {
-                name: "Joint",
-                id: "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi6",
-            },
-        ],
-    },
-    {
-        name: "Eyewear",
-        unique: true,
-        required: false,
-        traits: [
-            {
-                name: "Vision Bro",
-                id: "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi5",
-            },
-            {
-                name: "Vipers",
-                id: "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi4",
-            },
-            {
-                name: "Monocle",
-                id: "99a39c6aa7354e8ef64553922f7ddffe05293eaba3ff0e044f754eba8b560c3bi7",
-            },
-            {
-                name: "Black Eyes",
-                id: "bc60843466622be075d86e049793639f6e512f3ea8c738bf62fffc364e4c34e7i3",
-            },
-            {
-                name: "Laser Maxi",
-                id: "a4d550893e9052f3f7e973e199488420d1b976503e04eed860ac4a2dd5bf48adi4",
-            },
-        ],
-    },
-];
-
-function getTraitBySeed(seed, category) {
-    const traitCategory = traits.find((t) => t.name === category);
-    if (!traitCategory) return null;
-
-    if (category === "Background") {
-        const totalOptions = traitCategory.traits.length + 2;
-        const selection = seed % totalOptions;
-        if (selection === totalOptions - 2) return "matrix";
-        if (selection === totalOptions - 1) return "orange";
-        return selection < traitCategory.traits.length
-            ? traitCategory.traits[selection].id
-            : null;
-    }
-    const totalOptions = traitCategory.required
-        ? traitCategory.traits.length
-        : traitCategory.traits.length + 1;
-    const selection = seed % totalOptions;
-    return selection < traitCategory.traits.length
-        ? traitCategory.traits[selection].id
-        : null;
-}
-
-async function fetchImage(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const buffer = await response.buffer();
-
-        // Convert WebP to PNG using sharp
-        const pngBuffer = await sharp(buffer).toFormat("png").toBuffer();
-
-        return pngBuffer;
-    } catch (error) {
-        console.error(`Failed to fetch/convert image from ${url}:`, error);
-        return null;
-    }
-}
 
 module.exports = async (client, message, args) => {
     try {
@@ -332,10 +40,8 @@ module.exports = async (client, message, args) => {
         const yunaData = combinedData[number - 1];
         const [seed, id] = yunaData;
 
-        const totalCombinations = 154440;
-        const normalizedSeed = seed % totalCombinations;
-
-        // Calculate individual trait seeds
+        // Calculate trait seeds
+        const normalizedSeed = seed % 154440;
         const bgSeed = normalizedSeed % (traits[0].traits.length + 2);
         const bodySeed =
             Math.floor(normalizedSeed / (traits[0].traits.length + 2)) %
@@ -364,11 +70,25 @@ module.exports = async (client, message, args) => {
             (traits[4].traits.length + 1);
 
         // Get trait IDs
-        const bgId = getTraitBySeed(bgSeed, "Background");
-        const bodyId = getTraitBySeed(bodySeed, "Body");
-        const outfitId = getTraitBySeed(outfitSeed, "Outfit");
-        const accessoryId = getTraitBySeed(accessoriesSeed, "Accessories");
-        const eyewearId = getTraitBySeed(eyewearSeed, "Eyewear");
+        const bgId =
+            bgSeed === traits[0].traits.length
+                ? "matrix"
+                : bgSeed === traits[0].traits.length + 1
+                ? "orange"
+                : traits[0].traits[bgSeed].id;
+        const bodyId = traits[1].traits[bodySeed].id;
+        const outfitId = traits[2].traits[outfitSeed].id;
+        const accessoryId =
+            accessoriesSeed < traits[3].traits.length
+                ? traits[3].traits[accessoriesSeed].id
+                : null;
+        const eyewearId =
+            eyewearSeed < traits[4].traits.length
+                ? traits[4].traits[eyewearSeed].id
+                : null;
+
+        // Get rarity information
+        const rarityInfo = getRarityInfo(number);
 
         // Set up canvas
         const width = [0, 2, 3, 8, 10, 11].includes(bodySeed) ? 720 : 1080;
@@ -450,9 +170,6 @@ module.exports = async (client, message, args) => {
             name: `yuna-${number}.gif`,
         });
 
-        // Trait names already retrieved above
-
-        await loadingMsg.delete();
         // Create the Magic Eden button
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
@@ -461,36 +178,72 @@ module.exports = async (client, message, args) => {
                 .setURL(`https://magiceden.us/ordinals/item-details/${id}`)
         );
 
+        await loadingMsg.delete();
         await message.channel.send({
             embeds: [
                 {
                     title: `Yuna #${number}`,
-                    description: `**Seed:** ${seed}\n**Inscription ID:** ${id}`,
+                    description: `**Seed:** ${seed}\n**Inscription ID:** ${id}\n\n**Rarity Rank:** ${rarityInfo.rank} of ${rarityInfo.totalCount} (Top ${rarityInfo.percentile}%)`,
                     color: 0xff5500, // Orange color
                     fields: [
                         {
                             name: "Background",
-                            value: bgName,
+                            value: `${rarityInfo.traits.Background.name}\n*(${(
+                                rarityInfo.traits.Background.probability * 100
+                            ).toFixed(
+                                2
+                            )}% | Score: ${rarityInfo.traits.Background.score.toFixed(
+                                2
+                            )})*`,
                             inline: true,
                         },
                         {
                             name: "Body",
-                            value: bodyName,
+                            value: `${rarityInfo.traits.Body.name}\n*(${(
+                                rarityInfo.traits.Body.probability * 100
+                            ).toFixed(
+                                2
+                            )}% | Score: ${rarityInfo.traits.Body.score.toFixed(
+                                2
+                            )})*`,
                             inline: true,
                         },
                         {
                             name: "Outfit",
-                            value: outfitName,
+                            value: `${rarityInfo.traits.Outfit.name}\n*(${(
+                                rarityInfo.traits.Outfit.probability * 100
+                            ).toFixed(
+                                2
+                            )}% | Score: ${rarityInfo.traits.Outfit.score.toFixed(
+                                2
+                            )})*`,
                             inline: true,
                         },
                         {
                             name: "Accessories",
-                            value: accessoryName,
+                            value: `${rarityInfo.traits.Accessories.name}\n*(${(
+                                rarityInfo.traits.Accessories.probability * 100
+                            ).toFixed(
+                                2
+                            )}% | Score: ${rarityInfo.traits.Accessories.score.toFixed(
+                                2
+                            )})*`,
                             inline: true,
                         },
                         {
                             name: "Eyewear",
-                            value: eyewearName,
+                            value: `${rarityInfo.traits.Eyewear.name}\n*(${(
+                                rarityInfo.traits.Eyewear.probability * 100
+                            ).toFixed(
+                                2
+                            )}% | Score: ${rarityInfo.traits.Eyewear.score.toFixed(
+                                2
+                            )})*`,
+                            inline: true,
+                        },
+                        {
+                            name: "Rarity Score",
+                            value: `${rarityInfo.score.toFixed(4)}`,
                             inline: true,
                         },
                     ],
@@ -504,9 +257,7 @@ module.exports = async (client, message, args) => {
         });
     } catch (error) {
         console.error("Error in yuna command:", error);
-        message.channel.send(
-            "An error occurred while generating the Yuna NFT."
-        );
+        message.channel.send("An error occurred while fetching the Yuna NFT.");
     }
 };
 

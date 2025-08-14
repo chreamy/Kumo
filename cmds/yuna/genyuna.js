@@ -488,3 +488,4 @@ module.exports = async (client, message, args) => {
 };
 
 module.exports.desc = desc;
+module.exports.traits = traits;
