@@ -1,46 +1,58 @@
+// Core dependencies
 const mongoose = require("mongoose");
-const { Client, Events, GatewayIntentBits } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 require("dotenv/config");
 const config = require("./config.json");
 const { command } = require("./command");
-const guildSchema = require("./schemas/guild-schema");
+const { client } = require("./util/client");
+const { getGuildSettings } = require("./util/guild");
+const serviceManager = require("./service");
+const { processTokenMessage } = require("./util/tokenDetector");
+
 let defaultPrefix = "!";
 
-//+------------------------------------------+
-//         event list
-const { msgevents } = require("./events/msgevents");
-const { joinguild } = require("./events/guildevents/joinguild");
-//         end event list
-//+------------------------------------------+
-//         cmd list
 let cmdlist = {
-    // fun: {
-    //   spam: "spam",
-    // },
-    misc: {
-        // gpt: "gpt",
-        // ping: "ping",
-        echo: ["echo", "e"],
-        help: ["help", "h"],
-        // servers: ["servers", "server"]
-    },
-    yuna: {
-        genyuna: "genyuna",
-        yuna: ["yuna", "y"],
-    },
-    // user: {
-    //   avatar: ["avatar", "ava"],
-    //   userinfo: ["userinfo", "ui", "info", "getuser", "gu"],
-    //   messagecount: ["messagecount", "mc"],
-    // },
-    // util: {
-    //   changeprefix: ["changeprefix", "prefix"],
-    // },
+  // fun: {
+  //   spam: "spam",
+  // },
+  flashnet: {
+    ping: ["ping", "p"],
+    status: ["status", "s"],
+  },
+  token: {
+    stats: ["tokenstats", "stats", "token"],
+    top: ["top"],
+    gains: ["gains", "ga"],
+    newtokens: ["new", "newtokens"],
+    lookup: ["lookup", "token-info", "ti"],
+  },
+  setup: {
+    prefix: ["prefix", "setprefix"],
+    setping: ["setping", "pingeveryone"],
+    channel: ["setchannel", "channel"],
+    settings: ["settings", "config"],
+  },
+  misc: {
+    help: ["help", "h"],
+    clear: ["clear", "purge"],
+    echo: ["echo", "e"],
+  },
+  yuna: {
+    genyuna: "genyuna",
+    yuna: ["yuna", "y"],
+  },
+  // user: {
+  //   avatar: ["avatar", "ava"],
+  //   userinfo: ["userinfo", "ui", "info", "getuser", "gu"],
+  //   messagecount: ["messagecount", "mc"],
+  // },
+  // util: {
+  //   changeprefix: ["changeprefix", "prefix"],
+  // },
 };
 exports.cmdlist = cmdlist;
 
 // Importing command handlers
-const ping = require("./cmds/misc/ping");
 const gpt = require("./cmds/misc/gpt");
 const echo = require("./cmds/misc/echo");
 const help = require("./cmds/misc/help");
@@ -51,97 +63,165 @@ const spam = require("./cmds/fun/spam");
 const generate = require("./cmds/image/generate");
 const genyuna = require("./cmds/yuna/genyuna");
 const yuna = require("./cmds/yuna/yuna");
-
-const changeprefix = require("./cmds/util/changeprefix");
-const messagecount = require("./cmds/user/messagecountcmd");
+const ping = require("./cmds/flashnet/ping");
+const status = require("./cmds/flashnet/status");
+const prefix = require("./cmds/setup/prefix");
+const setping = require("./cmds/setup/setping");
+const channel = require("./cmds/setup/channel");
+const settings = require("./cmds/setup/settings");
+const clear = require("./cmds/misc/clear");
+const stats = require("./cmds/token/stats");
+const top = require("./cmds/token/top");
+const gains = require("./cmds/token/gains");
+const newtokens = require("./cmds/token/new");
+const lookup = require("./cmds/token/lookup");
 //         end cmd list
 //+------------------------------------------+
 
-const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-    ],
-});
-
 // MongoDB Connection
 mongoose
-    .connect(process.env.MONGO_URI, {
-        useNewUrlParser: true, // Use the new URL parser
-        useUnifiedTopology: true,
-    })
-    .then(() => console.log("Connected to MongoDB"))
-    .catch((err) => console.error("MongoDB connection error:", err));
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true, // Use the new URL parser
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 client.on("ready", async () => {
-    console.log("Bot is ready");
-    const currentdate = new Date();
-    const datetime = `${currentdate.getDate()}/${
-        currentdate.getMonth() + 1
-    }/${currentdate.getFullYear()} @ ${currentdate.getHours()}:${currentdate.getMinutes()}:${currentdate.getSeconds()}`;
-    const Embed = {
-        color: 0xfffffe,
-        description: `**Back Online ${datetime}**`,
-    };
-    client.channels
-        .fetch("1032596705201356810")
-        .then((channel) => channel.send({ embeds: [Embed] }));
+  console.log(`Bot is ready as ${client.user.tag}`);
+  const currentdate = new Date();
+  const datetime = `${currentdate.getDate()}/${
+    currentdate.getMonth() + 1
+  }/${currentdate.getFullYear()} @ ${currentdate.getHours()}:${currentdate.getMinutes()}:${currentdate.getSeconds()}`;
+
+  console.log(`Ready at: ${datetime}`);
+
+  // Modern styled embed
+  const readyEmbed = new EmbedBuilder()
+    .setTitle("🟢 Bot Online")
+    .setColor(0x2ecc71) // Green color
+    .addFields(
+      {
+        name: "📊 Statistics",
+        value: `\`\`\`yml\nServers: ${client.guilds.cache.size}\nUsers: ${client.users.cache.size}\nChannels: ${client.channels.cache.size}\`\`\``,
+        inline: true,
+      },
+      {
+        name: "⚡ Services",
+        value:
+          "```diff\n+ Health Monitor\n+ Token Stream\n+ Multi-Server Support```",
+        inline: true,
+      },
+      {
+        name: "🕐 Started At",
+        value: `<t:${Math.floor(Date.now() / 1000)}:F>`,
+        inline: false,
+      }
+    )
+    .setFooter({
+      text: `${client.user.tag} • Ready`,
+      iconURL: client.user.displayAvatarURL(),
+    });
+
+  // Send to original channel
+  client.channels
+    .fetch("1032596705201356810")
+    .then((channel) => channel.send({ embeds: [readyEmbed] }))
+    .catch(() =>
+      console.log("Could not send ready message to original channel")
+    );
+
+  // Start background services
+  try {
+    await serviceManager.startServices();
+  } catch (e) {
+    console.error("Failed to start services:", e);
+  }
 });
 
 client.on("messageCreate", async (message) => {
-    if (!message.guild) return;
-    if (message.author === client.user) return;
-    if (message.author.bot) return;
-    const gptChannelId = "1328187329344442399";
-    const guilddb = await guildSchema.findOne({ _id: message.guild.id });
-    let guildPrefix = guilddb ? guilddb.prefix : defaultPrefix;
-    // Handle events for specific channel
-    if (
-        message.channel.id === gptChannelId &&
-        !message.content.startsWith(guildPrefix) &&
-        !message.content.startsWith(">")
-    ) {
-        const args = message.content.trim().split(/\s+/); // Split message content into args
-        try {
-            // Trigger the GPT command directly
-            await gpt(client, message, args);
-        } catch (err) {
-            console.error("Error triggering GPT command:", err);
-        }
-        return; // Prevent further processing for this message
-    }
+  if (!message.guild) return;
+  if (message.author === client.user) return;
+  if (message.author.bot) return;
+
+  // Get guild settings from database
+  const guildSettings = await getGuildSettings(message.guild.id);
+  const guildPrefix = guildSettings?.prefix || defaultPrefix;
+
+  let tokenDetected = false;
+  try {
+    tokenDetected = await processTokenMessage(message);
+  } catch (error) {
+    console.error("Error processing token detection:", error);
+  }
+
+  if (tokenDetected) {
+    return;
+  }
+
+  if (typeof msgevents !== "undefined") {
     msgevents(message);
+  }
 
-    if (message.content.startsWith("<@1032039037990600766>")) {
-        message.channel.send({
-            embeds: [
-                {
-                    color: 0xfffffe,
-                    description: `Use server prefix \`${guildPrefix}\` to call commands`,
-                },
-            ],
-        });
-    }
-    if (message.channel.id != gptChannelId) {
-        return;
-    }
-    if (!message.content.startsWith(guildPrefix)) return;
+  // Bot mention handler
+  if (message.content.startsWith("<@1032039037990600766>")) {
+    message.channel.send({
+      embeds: [
+        {
+          color: 0xfffffe,
+          description: `Use server prefix \`${guildPrefix}\` to call commands`,
+        },
+      ],
+    });
+  }
 
-    const args = message.content
-        .slice(guildPrefix.length)
-        .split(/\s+/)
-        .filter(Boolean);
+  // Command processing
+  if (!message.content.startsWith(guildPrefix)) return;
 
-    for (const [category, cat_commands] of Object.entries(cmdlist)) {
-        for (const [key, value] of Object.entries(cat_commands)) {
-            command(client, value, eval(key), message, args);
-        }
+  const args = message.content
+    .slice(guildPrefix.length)
+    .split(/\s+/)
+    .filter(Boolean);
+
+  for (const [category, cat_commands] of Object.entries(cmdlist)) {
+    for (const [key, value] of Object.entries(cat_commands)) {
+      command(client, value, eval(key), message, args);
     }
+  }
 });
 
-client.on("guildCreate", function (guild) {
+client.on("guildCreate", async (guild) => {
+  console.log(`Joined new guild: ${guild.name} (${guild.id})`);
+  try {
+    await getGuildSettings(guild.id);
+    console.log(`Created database entry for guild: ${guild.name}`);
+  } catch (error) {
+    console.error(`Failed to create guild entry: ${error.message}`);
+  }
+
+  // Call original joinguild if defined
+  if (typeof joinguild !== "undefined") {
     joinguild(guild);
+  }
+});
+
+// Graceful shutdown handlers
+process.on("SIGINT", async () => {
+  console.log("\nShutting down...");
+  serviceManager.stopServices();
+  await mongoose.connection.close();
+  console.log("MongoDB connection closed");
+  client.destroy();
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  console.log("\nShutting down...");
+  serviceManager.stopServices();
+  await mongoose.connection.close();
+  console.log("MongoDB connection closed");
+  client.destroy();
+  process.exit(0);
 });
 
 client.login(process.env.TOKEN);
