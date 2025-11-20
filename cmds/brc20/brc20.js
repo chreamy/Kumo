@@ -15,16 +15,6 @@ module.exports = async (client, message, args) => {
 
     const ticker = args[0].toUpperCase();
 
-    // Show loading message
-    const loadingMsg = await message.channel.send({
-        embeds: [
-            {
-                color: 0x3498db,
-                description: `🔍 Fetching ${ticker} details from Best in Slot...`,
-            },
-        ],
-    });
-
     try {
         // Fetch ticker data from Best in Slot API
         const apiKey = process.env.BIS_API_KEY || "";
@@ -136,12 +126,12 @@ module.exports = async (client, message, args) => {
             timestamp: new Date().toISOString(),
         };
 
-        await loadingMsg.edit({ embeds: [embed] });
+        await message.channel.send({ embeds: [embed] });
 
         console.log(`✅ BRC-20 lookup successful: ${ticker}`);
     } catch (error) {
         console.error(`❌ BRC-20 lookup failed:`, error);
-        await loadingMsg.edit({
+        await message.channel.send({
             embeds: [
                 {
                     color: 0xe74c3c,
