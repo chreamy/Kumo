@@ -1,7 +1,11 @@
 const Guild = require("../schemas/guild");
+const { isDbReady, defaultGuildSettings } = require("./db");
 
 // Get guild settings from database
 async function getGuildSettings(guildId) {
+  if (!isDbReady()) {
+    return defaultGuildSettings(guildId);
+  }
   try {
     let guild = await Guild.findById(guildId);
     if (!guild) {
@@ -21,6 +25,7 @@ async function getGuildSettings(guildId) {
 
 // Update guild prefix
 async function updateGuildPrefix(guildId, newPrefix) {
+  if (!isDbReady()) return false;
   try {
     await Guild.findByIdAndUpdate(
       guildId,
@@ -36,6 +41,7 @@ async function updateGuildPrefix(guildId, newPrefix) {
 
 // Update guild pingEveryone setting
 async function updateGuildPingEveryone(guildId, enabled) {
+  if (!isDbReady()) return false;
   try {
     await Guild.findByIdAndUpdate(
       guildId,
@@ -51,6 +57,7 @@ async function updateGuildPingEveryone(guildId, enabled) {
 
 // Update guild announcement channel
 async function updateGuildChannel(guildId, channelId) {
+  if (!isDbReady()) return false;
   try {
     await Guild.findByIdAndUpdate(
       guildId,
@@ -66,6 +73,7 @@ async function updateGuildChannel(guildId, channelId) {
 
 // Set or clear ping role id
 async function updateGuildPingRole(guildId, roleId) {
+  if (!isDbReady()) return false;
   try {
     await Guild.findByIdAndUpdate(
       guildId,

@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const { EmbedBuilder } = require("discord.js");
 require("dotenv/config");
+const { connectMongo } = require("./util/db");
 const config = require("./config.json");
 const { command } = require("./command");
 const { client } = require("./util/client");
@@ -15,17 +16,17 @@ let cmdlist = {
     // fun: {
     //   spam: "spam",
     // },
-    flashnet: {
-        ping: ["ping", "p"],
-        status: ["status", "s"],
-    },
-    spark: {
-        stats: ["tokenstats", "stats", "token"],
-        top: ["top"],
-        gains: ["gains", "ga"],
-        newtokens: ["new", "newtokens"],
-        lookup: ["lookup", "token-info", "ti"],
-    },
+    // flashnet: {
+    //     ping: ["ping", "p"],
+    //     status: ["status", "s"],
+    // },
+    // spark: {
+    //     stats: ["tokenstats", "stats", "token"],
+    //     top: ["top"],
+    //     gains: ["gains", "ga"],
+    //     newtokens: ["new", "newtokens"],
+    //     lookup: ["lookup", "token-info", "ti"],
+    // },
     setup: {
         prefix: ["prefix", "setprefix"],
         setping: ["setping", "pingeveryone"],
@@ -40,6 +41,7 @@ let cmdlist = {
     yuna: {
         genyuna: "genyuna",
         yuna: ["yuna", "y"],
+        verify: ["verify", "holder"],
     },
     brc20: {
         brc20: ["brc20", "b"],
@@ -66,30 +68,21 @@ const spam = require("./cmds/fun/spam");
 const generate = require("./cmds/image/generate");
 const genyuna = require("./cmds/yuna/genyuna");
 const yuna = require("./cmds/yuna/yuna");
-const ping = require("./cmds/flashnet/ping");
-const status = require("./cmds/flashnet/status");
+const verify = require("./cmds/yuna/verify");
+const {
+    ensureVerifyPanel,
+    onVerifyInteraction,
+} = require("./util/yunaVerify");
 const prefix = require("./cmds/setup/prefix");
 const setping = require("./cmds/setup/setping");
 const channel = require("./cmds/setup/channel");
 const settings = require("./cmds/setup/settings");
 const clear = require("./cmds/misc/clear");
-const stats = require("./cmds/spark/stats");
-const top = require("./cmds/spark/top");
-const gains = require("./cmds/spark/gains");
-const newtokens = require("./cmds/spark/new");
-const lookup = require("./cmds/spark/lookup");
 const brc20 = require("./cmds/brc20/brc20");
 //         end cmd list
 //+------------------------------------------+
 
-// MongoDB Connection
-mongoose
-    .connect(process.env.MONGO_URI, {
-        useNewUrlParser: true, // Use the new URL parser
-        useUnifiedTopology: true,
-    })
-    .then(() => console.log("Connected to MongoDB"))
-    .catch((err) => console.error("MongoDB connection error:", err));
+connectMongo();
 
 client.on("ready", async () => {
     console.log(`Bot is ready as ${client.user.tag}`);
@@ -139,6 +132,14 @@ client.on("ready", async () => {
         await serviceManager.startServices();
     } catch (e) {
         console.error("Failed to start services:", e);
+    }
+
+    connectMongo();
+
+    try {
+        await ensureVerifyPanel(client);
+    } catch (e) {
+        console.error("Failed to setup verify panel:", e);
     }
 });
 
@@ -193,6 +194,22 @@ client.on("messageCreate", async (message) => {
     }
 });
 
+client.on("interactionCreate", async (interaction) => {
+    try {
+        await onVerifyInteraction(interaction);
+    } catch (error) {
+        console.error("Verify interaction error:", error);
+        if (interaction.isRepliable() && !interaction.replied) {
+            interaction
+                .reply({
+                    content: "Something went wrong during verification.",
+                    flags: 64,
+                })
+                .catch(() => null);
+        }
+    }
+});
+
 client.on("guildCreate", async (guild) => {
     console.log(`Joined new guild: ${guild.name} (${guild.id})`);
     try {
@@ -212,8 +229,10 @@ client.on("guildCreate", async (guild) => {
 process.on("SIGINT", async () => {
     console.log("\nShutting down...");
     serviceManager.stopServices();
-    await mongoose.connection.close();
-    console.log("MongoDB connection closed");
+    if (mongoose.connection.readyState !== 0) {
+        await mongoose.connection.close();
+        console.log("MongoDB connection closed");
+    }
     client.destroy();
     process.exit(0);
 });
@@ -221,7 +240,9 @@ process.on("SIGINT", async () => {
 process.on("SIGTERM", async () => {
     console.log("\nShutting down...");
     serviceManager.stopServices();
-    await mongoose.connection.close();
+    if (mongoose.connection.readyState !== 0) {
+        await mongoose.connection.close();
+    }
     console.log("MongoDB connection closed");
     client.destroy();
     process.exit(0);
