@@ -58,14 +58,12 @@ let cmdlist = {
 exports.cmdlist = cmdlist;
 
 // Importing command handlers
-const gpt = require("./cmds/misc/gpt");
 const echo = require("./cmds/misc/echo");
 const help = require("./cmds/misc/help");
 const avatar = require("./cmds/user/avatar");
 const servers = require("./cmds/misc/servers");
 const userinfo = require("./cmds/user/userinfo");
 const spam = require("./cmds/fun/spam");
-const generate = require("./cmds/image/generate");
 const genyuna = require("./cmds/yuna/genyuna");
 const yuna = require("./cmds/yuna/yuna");
 const verify = require("./cmds/yuna/verify");
